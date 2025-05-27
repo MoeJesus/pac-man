@@ -1,6 +1,7 @@
 import pyxel
 import enum
 from player import Player, Direction
+from hud import HUD
 
 
 # Game state labels
@@ -18,12 +19,13 @@ class App:
         pyxel.init(224, 288, display_scale = 3, title = "Pac-Man", fps = 60)
         pyxel.load("assets/resources.pyxres")
         self.current_game_state = GameState.STARTING
+        self.frames = 0
         self.player = Player(pyxel.width / 2 - 8, pyxel.height / 2 + (7.5 * 8))
         self.player_direction = self.player.direction
         self.score = self.player.score
         self.cookie_counter = self.player.cookie_counter
         self.power = self.player.powered
-        self.frames = 0
+        self.player_lives = 5
         self.start_stage()
         pyxel.run(self.update, self.draw)
 
@@ -56,9 +58,11 @@ class App:
             self.current_game_state = GameState.RUNNING
 
     # Checks to see if all the cookies are eaten
-    def check_win(self):
+    def check_win_or_lose(self):
         if self.cookie_counter >= 244:
             self.current_game_state = GameState.GAME_WIN
+        if self.player_lives < 0:
+            self.current_game_state = GameState.GAME_OVER
 
     def update(self):
         if self.current_game_state == GameState.STARTING:
@@ -67,12 +71,29 @@ class App:
             self.player.update_player()
             self.score, self.cookie_counter, self.power = self.player.eat_cookies(self.player.x, self.player.y)
             self.check_power()
-            self.check_win()
+            self.check_win_or_lose()
+
+            # Makes the power up cookies blink
+            for y in range(36):
+                for x in range(28):
+                    if pyxel.tilemaps[0].pget(x, y) == (2, 1):
+                        if pyxel.frame_count % 16 < 8:
+                            pyxel.tilemaps[0].pset(x, y, (3, 1))
+                    elif pyxel.tilemaps[0].pget(x, y) == (3, 1):
+                        if pyxel.frame_count % 16 >= 8:
+                            pyxel.tilemaps[0].pset(x, y, (2, 1))
+
+            # Temporary code to test lives
+            if pyxel.btnp(pyxel.KEY_L):
+                self.player_lives -= 1
+            if pyxel.btnp(pyxel.KEY_P):
+                self.player_lives += 1
 
     def draw(self):
         pyxel.cls(0)
         self.player.draw_player(self.player_direction)
         pyxel.bltm(0, 0, 0, 0, 0, pyxel.width, pyxel.height, 0)
+        HUD.draw_lives(self, self.player_lives)
         pyxel.text(0, 0, str(self.score), 7)
         pyxel.text(100, 0, str(self.player.power_counter), 7)
         pyxel.text(150, 0, str(self.current_game_state), 7)
@@ -83,10 +104,11 @@ App()
 
 #############################################
 #                To Do List                 #
-# Makes lives counter and add it to the HUD #
 # Draw ghost sprites                        #
+# Create ghosts class                       #
 # Create the AI for the ghosts              #
-#                                           #
-#                                           #
-#                                           #
+# Draw the text in the game                 #
+# Add all text to the HUD                   #
+# Draw the fruits                           #
+# Add the fruits as pick up items           #
 #############################################
