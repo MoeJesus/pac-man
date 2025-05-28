@@ -1,6 +1,7 @@
 import pyxel
 import enum
 from player import Player, Direction
+from ghosts import Ghost, Direction
 from hud import HUD
 
 
@@ -26,6 +27,12 @@ class App:
         self.cookie_counter = self.player.cookie_counter
         self.power = self.player.powered
         self.player_lives = 5
+        self.eaten_ghosts = [False, False, False, False]
+        self.blinky = Ghost(pyxel.width / 2 - 8, pyxel.height / 2 - (4.5 * 8), 0)
+        self.pinky = Ghost(pyxel.width / 2 - 8, pyxel.height / 2 - (1.5 * 8), 1)
+        self.inky = Ghost(pyxel.width / 2 - (3 * 8), pyxel.height / 2 - (1.5 * 8), 2)
+        self.clyde = Ghost(pyxel.width / 2 + 8, pyxel.height / 2 - (1.5 * 8), 3)
+        self.targets = [(self.player.x, self.player.y), (self.player.x, self.player.y), (self.player.x, self.player.y), (self.player.x, self.player.y)]
         self.start_stage()
         pyxel.run(self.update, self.draw)
 
@@ -69,6 +76,10 @@ class App:
             self.starting_game()
         if self.current_game_state == GameState.RUNNING or self.current_game_state == GameState.POWERED_UP:
             self.player.update_player()
+            self.blinky.update_ghost()
+            self.pinky.update_ghost()
+            self.inky.update_ghost()
+            self.clyde.update_ghost()
             self.score, self.cookie_counter, self.power = self.player.eat_cookies(self.player.x, self.player.y)
             self.check_power()
             self.check_win_or_lose()
@@ -92,6 +103,10 @@ class App:
     def draw(self):
         pyxel.cls(0)
         self.player.draw_player(self.player_direction)
+        self.blinky.draw_ghost(self.blinky.ghost_direction)
+        self.pinky.draw_ghost(self.pinky.ghost_direction)
+        self.inky.draw_ghost(self.inky.ghost_direction)
+        self.clyde.draw_ghost(self.clyde.ghost_direction)
         pyxel.bltm(0, 0, 0, 0, 0, pyxel.width, pyxel.height, 0)
         HUD.draw_lives(self, self.player_lives)
         pyxel.text(0, 0, str(self.score), 7)

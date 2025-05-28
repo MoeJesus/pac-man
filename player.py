@@ -99,7 +99,6 @@ class Player:
             self.cookie_counter += 1
             self.powered = True
             self.power_counter = 600
-            # eaten_ghosts = [False, False, False, False]
         return self.score, self.cookie_counter, self.powered
 
     # Helper functions to easily check for collisions to walls

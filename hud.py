@@ -8,4 +8,4 @@ class HUD:
 
     def draw_lives(self, lives):
         for i in range(lives):
-            pyxel.blt((16 + 16 * i), 272, 0, 0, 16, -16, 16)
+            pyxel.blt((16 + 16 * i), 272, 0, 32, 0, 16, 16)
