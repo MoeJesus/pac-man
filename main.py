@@ -17,7 +17,7 @@ class GameState(enum.Enum):
 
 class App:
     def __init__(self):
-        pyxel.init(224, 288, display_scale = 3, title = "Pac-Man", fps = 60)
+        pyxel.init(224, 288, display_scale = 2, title = "Pac-Man", fps = 60)
         pyxel.load("assets/resources.pyxres")
         self.current_game_state = GameState.STARTING
         self.frames = 0
@@ -28,10 +28,12 @@ class App:
         self.power = self.player.powered
         self.player_lives = 5
         self.eaten_ghosts = [False, False, False, False]
-        self.blinky = Ghost(pyxel.width / 2 - 8, pyxel.height / 2 - (4.5 * 8), 0)
-        self.pinky = Ghost(pyxel.width / 2 - 8, pyxel.height / 2 - (1.5 * 8), 1)
-        self.inky = Ghost(pyxel.width / 2 - (3 * 8), pyxel.height / 2 - (1.5 * 8), 2)
-        self.clyde = Ghost(pyxel.width / 2 + 8, pyxel.height / 2 - (1.5 * 8), 3)
+        for i in range(3):
+            self.ghost[i] = (x, y, i)
+        #self.blinky = Ghost(pyxel.width / 2 - 8, pyxel.height / 2 - (4.5 * 8), 0)
+        #self.pinky = Ghost(pyxel.width / 2 - 8, pyxel.height / 2 - (1.5 * 8), 1)
+        #self.inky = Ghost(pyxel.width / 2 - (3 * 8), pyxel.height / 2 - (1.5 * 8), 2)
+        #self.clyde = Ghost(pyxel.width / 2 + 8, pyxel.height / 2 - (1.5 * 8), 3)
         self.targets = [(self.player.x, self.player.y), (self.player.x, self.player.y), (self.player.x, self.player.y), (self.player.x, self.player.y)]
         self.start_stage()
         pyxel.run(self.update, self.draw)
@@ -76,6 +78,8 @@ class App:
             self.starting_game()
         if self.current_game_state == GameState.RUNNING or self.current_game_state == GameState.POWERED_UP:
             self.player.update_player()
+            for i in range(3):
+                self.ghost[i].update_ghost()
             self.blinky.update_ghost()
             self.pinky.update_ghost()
             self.inky.update_ghost()
@@ -103,10 +107,12 @@ class App:
     def draw(self):
         pyxel.cls(0)
         self.player.draw_player(self.player_direction)
-        self.blinky.draw_ghost(self.blinky.ghost_direction)
-        self.pinky.draw_ghost(self.pinky.ghost_direction)
-        self.inky.draw_ghost(self.inky.ghost_direction)
-        self.clyde.draw_ghost(self.clyde.ghost_direction)
+        for i in range(3):
+            self.ghost[i].draw_ghost(self.ghost[i].ghost_direction)
+        #self.blinky.draw_ghost(self.blinky.ghost_direction)
+        #self.pinky.draw_ghost(self.pinky.ghost_direction)
+        #self.inky.draw_ghost(self.inky.ghost_direction)
+        #self.clyde.draw_ghost(self.clyde.ghost_direction)
         pyxel.bltm(0, 0, 0, 0, 0, pyxel.width, pyxel.height, 0)
         HUD.draw_lives(self, self.player_lives)
         pyxel.text(0, 0, str(self.score), 7)
@@ -119,8 +125,7 @@ App()
 
 #############################################
 #                To Do List                 #
-# Draw ghost sprites                        #
-# Create ghosts class                       #
+# Continue working on ghost class           #
 # Create the AI for the ghosts              #
 # Draw the text in the game                 #
 # Add all text to the HUD                   #

@@ -31,15 +31,23 @@ class Ghost:
 
         if self.id == 0: # Blinky
             self.ghost_image = [32, 48, 16, 16]
+            self.x = pyxel.width / 2 - 8
+            self.y = pyxel.height / 2 - (4.5 * 8)
             self.direction = Direction.LEFT
         elif self.id == 1: # Pinky
             self.ghost_image = [32, 64, 16, 16]
+            self.x = pyxel.width / 2 - 8
+            self.y = pyxel.height / 2 - (1.5 * 8)
             self.direction = Direction.DOWN
         elif self.id == 2: # Inky
             self.ghost_image = [32, 80, 16, 16]
+            self.x = pyxel.width / 2 - (3 * 8)
+            self.y = pyxel.height / 2 - (1.5 * 8)
             self.direction = Direction.UP
         elif self.id == 3: # Clyde
             self.ghost_image = [32, 96, 16, 16]
+            self.x = pyxel.width / 2 + 8
+            self.y = pyxel.height / 2 - (1.5 * 8)
             self.direction = Direction.UP
 
 
