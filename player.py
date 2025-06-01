@@ -24,7 +24,7 @@ class Player:
         self.score = 0
         self.cookie_counter = 0
         self.powered = False
-        self.power_counter = 0
+        self.powered_counter = 0
 
     def draw_player(self, direction):
         sprite_x = self.player_image[0]
@@ -80,9 +80,9 @@ class Player:
             self.x = -16
 
         # Checks to see if the player is powered up
-        if self.powered == True and self.power_counter > 0:
-            self.power_counter -= 1
-        elif self.powered == True and self.power_counter <= 0:
+        if self.powered == True and self.powered_counter > 0:
+            self.powered_counter -= 1
+        elif self.powered == True and self.powered_counter <= 0:
             self.powered = False
 
     # Function for the player to eat cookies and add points
@@ -98,8 +98,8 @@ class Player:
             self.score += 50
             self.cookie_counter += 1
             self.powered = True
-            self.power_counter = 600
-        return self.score, self.cookie_counter, self.powered
+            self.powered_counter = 600
+        return self.score, self.cookie_counter, self.powered, self.powered_counter
 
     # Helper functions to easily check for collisions to walls
     def is_colliding(self, x, y):

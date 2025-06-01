@@ -1,7 +1,7 @@
 import pyxel
 
 
-class HUD:
+class Hud:
     def __init__(self, x, y):
         self.x = x
         self.y = y

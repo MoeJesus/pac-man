@@ -23,7 +23,7 @@ class Ghost:
         self.dx = 0
         self.dy = 0
         self.ghost_direction = Direction.UP
-        # self.dead = dead
+        # self.eaten = eaten
         # self.in_box = box
         self.id = id
         # self.turns, self.in_box = self.check_collisions()
@@ -31,41 +31,42 @@ class Ghost:
 
         if self.id == 0: # Blinky
             self.ghost_image = [32, 48, 16, 16]
-            self.x = pyxel.width / 2 - 8
-            self.y = pyxel.height / 2 - (4.5 * 8)
             self.direction = Direction.LEFT
         elif self.id == 1: # Pinky
             self.ghost_image = [32, 64, 16, 16]
-            self.x = pyxel.width / 2 - 8
-            self.y = pyxel.height / 2 - (1.5 * 8)
             self.direction = Direction.DOWN
         elif self.id == 2: # Inky
             self.ghost_image = [32, 80, 16, 16]
-            self.x = pyxel.width / 2 - (3 * 8)
-            self.y = pyxel.height / 2 - (1.5 * 8)
             self.direction = Direction.UP
         elif self.id == 3: # Clyde
             self.ghost_image = [32, 96, 16, 16]
-            self.x = pyxel.width / 2 + 8
-            self.y = pyxel.height / 2 - (1.5 * 8)
             self.direction = Direction.UP
 
 
-    def draw_ghost(self, direction):
+    def draw_ghost(self, direction, powered, powered_counter):
         sprite_x = self.ghost_image[0]
         sprite_y = self.ghost_image[1]
         width = self.ghost_image[2]
         height = self.ghost_image[3]
 
-        if self.direction == Direction.UP:
-            sprite_x = ((pyxel.frame_count // 8 % 2) + 2) * 16
-        elif self.direction == Direction.DOWN:
-            sprite_x = ((pyxel.frame_count // 8 % 2) + 4) * 16
-        elif self.direction == Direction.LEFT:
-            sprite_x = pyxel.frame_count // 8 % 2 * 16
-            width = width * -1
-        elif self.direction == Direction.RIGHT:
-            sprite_x = pyxel.frame_count // 8 % 2 * 16
+        if powered:
+            if powered_counter >= 240 or (powered_counter <= 220 and powered_counter > 200) or (powered_counter <= 180 and powered_counter > 160) or (powered_counter <= 140 and powered_counter > 120) or (powered_counter <= 100 and powered_counter > 80) or (powered_counter <= 60 and powered_counter > 40) or (powered_counter <= 20):
+                sprite_x = ((pyxel.frame_count // 8 % 2) + 6) * 16
+                sprite_y = 48
+            else:
+                sprite_x = ((pyxel.frame_count // 8 % 2) + 6) * 16
+                sprite_y = 64
+        else:
+            if self.direction == Direction.UP:
+                sprite_x = ((pyxel.frame_count // 8 % 2) + 2) * 16
+            elif self.direction == Direction.DOWN:
+                sprite_x = ((pyxel.frame_count // 8 % 2) + 4) * 16
+            elif self.direction == Direction.LEFT:
+                sprite_x = pyxel.frame_count // 8 % 2 * 16
+                width = width * -1
+            elif self.direction == Direction.RIGHT:
+                sprite_x = pyxel.frame_count // 8 % 2 * 16
+
             
         pyxel.blt(self.x, self.y, 0, sprite_x, sprite_y, width, height)
 

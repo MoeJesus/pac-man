@@ -2,7 +2,7 @@ import pyxel
 import enum
 from player import Player, Direction
 from ghosts import Ghost, Direction
-from hud import HUD
+from hud import Hud
 
 
 # Game state labels
@@ -26,14 +26,13 @@ class App:
         self.score = self.player.score
         self.cookie_counter = self.player.cookie_counter
         self.power = self.player.powered
+        self.power_counter = self.player.powered_counter
         self.player_lives = 5
         self.eaten_ghosts = [False, False, False, False]
-        for i in range(3):
-            self.ghost[i] = (x, y, i)
-        #self.blinky = Ghost(pyxel.width / 2 - 8, pyxel.height / 2 - (4.5 * 8), 0)
-        #self.pinky = Ghost(pyxel.width / 2 - 8, pyxel.height / 2 - (1.5 * 8), 1)
-        #self.inky = Ghost(pyxel.width / 2 - (3 * 8), pyxel.height / 2 - (1.5 * 8), 2)
-        #self.clyde = Ghost(pyxel.width / 2 + 8, pyxel.height / 2 - (1.5 * 8), 3)
+        self.blinky = Ghost(pyxel.width / 2 - 8, pyxel.height / 2 - (4.5 * 8), 0)
+        self.pinky = Ghost(pyxel.width / 2 - 8, pyxel.height / 2 - (1.5 * 8), 1)
+        self.inky = Ghost(pyxel.width / 2 - (3 * 8), pyxel.height / 2 - (1.5 * 8), 2)
+        self.clyde = Ghost(pyxel.width / 2 + 8, pyxel.height / 2 - (1.5 * 8), 3)
         self.targets = [(self.player.x, self.player.y), (self.player.x, self.player.y), (self.player.x, self.player.y), (self.player.x, self.player.y)]
         self.start_stage()
         pyxel.run(self.update, self.draw)
@@ -78,13 +77,11 @@ class App:
             self.starting_game()
         if self.current_game_state == GameState.RUNNING or self.current_game_state == GameState.POWERED_UP:
             self.player.update_player()
-            for i in range(3):
-                self.ghost[i].update_ghost()
             self.blinky.update_ghost()
             self.pinky.update_ghost()
             self.inky.update_ghost()
             self.clyde.update_ghost()
-            self.score, self.cookie_counter, self.power = self.player.eat_cookies(self.player.x, self.player.y)
+            self.score, self.cookie_counter, self.power, self.power_counter = self.player.eat_cookies(self.player.x, self.player.y)
             self.check_power()
             self.check_win_or_lose()
 
@@ -107,16 +104,14 @@ class App:
     def draw(self):
         pyxel.cls(0)
         self.player.draw_player(self.player_direction)
-        for i in range(3):
-            self.ghost[i].draw_ghost(self.ghost[i].ghost_direction)
-        #self.blinky.draw_ghost(self.blinky.ghost_direction)
-        #self.pinky.draw_ghost(self.pinky.ghost_direction)
-        #self.inky.draw_ghost(self.inky.ghost_direction)
-        #self.clyde.draw_ghost(self.clyde.ghost_direction)
+        self.blinky.draw_ghost(self.blinky.ghost_direction, self.power, self.power_counter)
+        self.pinky.draw_ghost(self.pinky.ghost_direction, self.power, self.power_counter)
+        self.inky.draw_ghost(self.inky.ghost_direction, self.power, self.power_counter)
+        self.clyde.draw_ghost(self.clyde.ghost_direction, self.power, self.power_counter)
         pyxel.bltm(0, 0, 0, 0, 0, pyxel.width, pyxel.height, 0)
-        HUD.draw_lives(self, self.player_lives)
+        Hud.draw_lives(self, self.player_lives)
         pyxel.text(0, 0, str(self.score), 7)
-        pyxel.text(100, 0, str(self.player.power_counter), 7)
+        pyxel.text(100, 0, str(self.power_counter), 7)
         pyxel.text(150, 0, str(self.current_game_state), 7)
 
 App()
@@ -125,7 +120,7 @@ App()
 
 #############################################
 #                To Do List                 #
-# Continue working on ghost class           #
+# Work on ghosts' collision                 #
 # Create the AI for the ghosts              #
 # Draw the text in the game                 #
 # Add all text to the HUD                   #
