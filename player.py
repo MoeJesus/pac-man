@@ -25,6 +25,7 @@ class Player:
         self.cookie_counter = 0
         self.powered = False
         self.powered_counter = 0
+        self.player_lives = 5
 
     def draw_player(self, direction):
         sprite_x = self.player_image[0]
@@ -100,6 +101,14 @@ class Player:
             self.powered = True
             self.powered_counter = 600
         return self.score, self.cookie_counter, self.powered, self.powered_counter
+
+    # Function for colliding with a ghost
+    def is_caught(self, player_x, player_y, ghost_x, ghost_y, powered):
+        if player_x == ghost_x and player_y == ghost_y:
+            if powered:
+                pass
+            else:
+                self.player_lives -= 1
 
     # Helper functions to easily check for collisions to walls
     def is_colliding(self, x, y):

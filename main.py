@@ -27,7 +27,7 @@ class App:
         self.cookie_counter = self.player.cookie_counter
         self.power = self.player.powered
         self.power_counter = self.player.powered_counter
-        self.player_lives = 5
+        self.player_lives = self.player.player_lives
         self.eaten_ghosts = [False, False, False, False]
         self.blinky = Ghost(pyxel.width / 2 - 8, pyxel.height / 2 - (4.5 * 8), 0)
         self.pinky = Ghost(pyxel.width / 2 - 8, pyxel.height / 2 - (1.5 * 8), 1)
@@ -83,6 +83,7 @@ class App:
             self.clyde.update_ghost()
             self.score, self.cookie_counter, self.power, self.power_counter = self.player.eat_cookies(self.player.x, self.player.y)
             self.check_power()
+            #self. player.is_caught(self.player.x, self.player.y)
             self.check_win_or_lose()
 
             # Makes the power up cookies blink
@@ -120,7 +121,7 @@ App()
 
 #############################################
 #                To Do List                 #
-# Work on ghosts' collision                 #
+# Fix ghosts' collision                     #
 # Create the AI for the ghosts              #
 # Draw the text in the game                 #
 # Add all text to the HUD                   #
